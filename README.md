@@ -272,22 +272,22 @@ Optional data collection through Google Places API is supported through environm
 
 ---
 
-## Roadmap
+## Project Status
 
-- [ ] Data validation and preprocessing
-- [ ] Review-level and restaurant-level document construction
-- [ ] SentenceTransformer embedding pipeline
-- [ ] FAISS vector index
-- [ ] Dense semantic retrieval
-- [ ] Hybrid ranking
-- [ ] Source-grounded answer generation
-- [ ] FastAPI service
-- [ ] Docker deployment
-- [ ] Retrieval evaluation
-- [ ] Automated tests
-- [ ] GitHub Actions CI
-- [ ] Optional cross-encoder reranking
-- [ ] Optional hosted demo
+The project is under active development.
+
+Current progress:
+
+- [x] Dataset validation
+- [x] Restaurant-review merging
+- [x] Text cleaning and deduplication
+- [x] Restaurant and review document construction
+- [x] SentenceTransformer embeddings
+- [x] FAISS index construction
+- [ ] Query-aware retrieval
+- [ ] Answer generation
+- [ ] Evaluation
+- [ ] API and deployment
 
 ---
 
