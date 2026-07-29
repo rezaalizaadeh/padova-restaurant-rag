@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+# Model caches
+.model_cache/
+
+# Generated artifacts
+*.npy
+*.index
+*.pkl
+
+# Operating system
+.DS_Store
+
+# Private/full datasets
+data/raw/
