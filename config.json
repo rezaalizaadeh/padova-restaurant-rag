@@ -1,0 +1,11 @@
+{
+  "model_path": "embedding_model",
+  "embeddings_file": "embeddings.npy",
+  "faiss_index_file": "faiss.index",
+  "documents_file": "documents.pkl",
+  "metadata_file": "metadata.json",
+  "normalize_embeddings": true,
+  "faiss_index_type": "IndexFlatIP",
+  "candidate_pool_size": 200,
+  "default_result_count": 5
+}
