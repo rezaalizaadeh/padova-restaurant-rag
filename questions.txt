@@ -1,0 +1,23 @@
+0: What are the best restaurants in the city?
+1: Which restaurant has the best ambiance in the city?
+2: Are there any 24-hour restaurants in the city?
+3: Where can I find the best Italian food in the city?
+4: What are the top-rated sushi restaurants in the city?
+5: Are there any good vegan restaurants in the city?
+6: What are the best restaurants near Landmark in the city?
+7: Can you recommend a good place to eat in downtown the city?
+8: What are some hidden gems for dining in Neighborhood?
+9: What are some romantic restaurants in the city for a date night?
+10: Where can I find a family-friendly restaurant in the city?
+11: What are the best restaurants in the city for a birthday celebration?
+12: What are the best gluten-free restaurants in the city?
+13: Are there any keto-friendly dining options in the city?
+14: Can you recommend any halal restaurants in the city?
+15: Which restaurants in the city have the best customer service?
+16: Are there any restaurants in the city with a high hygiene rating?
+17: What are the most affordable but high-quality restaurants in the city?
+18: Which restaurants in the city offer outdoor seating?
+19: Are there any restaurants in the city with live music?
+20: Does Bar Fortuna Sas offer delivery services?
+21: Is Crazy Pizza a good option for a budget-friendly meal?
+22: Does Crazy Pizza offer dine-in options? 
