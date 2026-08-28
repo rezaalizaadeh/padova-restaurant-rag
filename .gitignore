@@ -21,3 +21,6 @@ professor-venv/
 
 # Local pretrained model weights
 embedding_model/model.safetensors
+
+# Hugging Face download cache
+.model_cache/
