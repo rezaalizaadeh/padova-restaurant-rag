@@ -1,0 +1,14 @@
+{
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "local_model_directory": "embedding_model",
+  "embedding_dimension": 384,
+  "number_of_documents": 3070,
+  "number_of_restaurants": 513,
+  "number_of_clean_reviews": 2557,
+  "document_type_counts": {
+    "restaurant_facts": 513,
+    "review": 2557
+  },
+  "similarity": "cosine similarity using normalized inner product",
+  "python_version_required": "3.11"
+}
