@@ -1,0 +1,15 @@
+{
+  "report_created": "2026-08-27T15:55:00+02:00",
+  "source": "Google Places API (New)",
+  "city": "Padova, Italy",
+  "raw_restaurants": 502,
+  "raw_reviews": 2433,
+  "restaurants_outside_padova_removed": 51,
+  "clean_restaurants": 451,
+  "clean_reviews": 2176,
+  "duplicate_reviews_removed": 3,
+  "restaurants_with_reviews": 445,
+  "restaurants_without_reviews": 6,
+  "padova_address_or_postcode_matches": 451,
+  "overlap_with_professor_dataset": 174
+}
