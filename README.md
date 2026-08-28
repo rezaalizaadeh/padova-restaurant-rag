@@ -5,7 +5,7 @@
 This project implements a local Retrieval-Augmented Question Answering system
 about restaurants in Padova. It searches restaurant metadata and customer
 reviews, ranks relevant evidence, and produces grounded natural-language
-answers. The inference program works without an API key or internet access.
+answers. The inference program does not require an API key. On a fresh clone, the embedding model is downloaded once; subsequent runs can work offline.
 
 The project was developed for the NLP Course A.A. 2025/2026 and is compatible
 with Python 3.11.
@@ -37,8 +37,7 @@ model, in accordance with the instructor's recommendation.
 Google Places returns a small sample of reviews for each restaurant (at most
 five in this collection). The independent dataset overlaps the instructor data
 on 174 restaurant identifiers. The API key is entered invisibly at runtime,
-is never written to disk, and is not included in the submission. `exam.py` is
-fully offline and never calls Google APIs.
+is never written to disk, and is not included in the submission. `exam.py` never calls Google APIs. If the embedding-model weights are not available locally, they are downloaded once before inference.
 
 ## RAG pipeline
 
@@ -121,7 +120,7 @@ facts.
 - `questions.txt`: questions read at runtime;
 - `Question-Answer.txt`: answers for the instructor's official questions;
 - `places.csv`, `reviews.csv`: source data;
-- `embedding_model/`: local pretrained embedding model;
+- `embedding_model/`: embedding-model configuration; large model weights are downloaded locally on first use and are not stored in Git;
 - `embeddings.npy`: saved normalized document embeddings;
 - `faiss.index`: saved FAISS search index;
 - `documents.pkl`: document text and structured evidence in vector order;
@@ -184,9 +183,7 @@ To rebuild the knowledge base, saved embeddings, FAISS index, and
 python full-code.py
 ```
 
-If `embedding_model/` is already present, the local model is used. If it is
-absent, `full-code.py` downloads the named pretrained model and saves it for
-later offline inference.
+If `embedding_model/model.safetensors` is already present, the local model is used. Otherwise, the pretrained model is downloaded once and saved locally for later offline inference.
 
 ## Limitations
 
@@ -200,5 +197,4 @@ later offline inference.
 - Questions containing literal placeholders such as `Landmark` or
   `Neighborhood` cannot support a verified proximity answer until a real
   location is supplied.
-- The system uses deterministic evidence-based generation rather than an
-  external generative API, ensuring reproducible offline execution.
+- The system uses deterministic evidence-based generation rather than an external generative API. After the one-time embedding-model download, inference can run offline.

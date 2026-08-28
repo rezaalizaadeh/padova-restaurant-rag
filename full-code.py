@@ -650,7 +650,7 @@ def load_embedding_model():
     print("\nLOADING EMBEDDING MODEL")
     print("-" * 80)
 
-    if os.path.isdir(LOCAL_MODEL_DIR):
+    if os.path.isfile(os.path.join(LOCAL_MODEL_DIR, "model.safetensors")):
         print(f"Loading local model from: {LOCAL_MODEL_DIR}")
         model = SentenceTransformer(LOCAL_MODEL_DIR, device="cpu")
     else:

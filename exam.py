@@ -18,7 +18,6 @@ import sys
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 os.environ.setdefault("OMP_NUM_THREADS", "1")
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
 
 import faiss
 import numpy as np
@@ -29,6 +28,7 @@ from qa_engine import answer_questions
 
 QUESTIONS_FILE = os.path.join(BASE_DIR, "questions.txt")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
+MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 
 def require_file(path):
@@ -40,6 +40,26 @@ def require_file(path):
             "Keep all submitted assets in the same folder as exam.py."
         )
 
+
+
+def load_embedding_model(model_path):
+    """Load local model weights or download them once if missing."""
+    weights_path = os.path.join(model_path, "model.safetensors")
+
+    if os.path.isfile(weights_path):
+        print(f"Loading local embedding model from: {model_path}")
+        return SentenceTransformer(
+            model_path,
+            device="cpu",
+            local_files_only=True,
+        )
+
+    print(f"Local model weights not found. Downloading: {MODEL_NAME}")
+    model = SentenceTransformer(MODEL_NAME, device="cpu")
+    os.makedirs(model_path, exist_ok=True)
+    model.save(model_path)
+    print(f"Embedding model saved locally to: {model_path}")
+    return model
 
 def load_questions(path):
     """Read non-empty numbered or unnumbered questions from a text file."""
@@ -74,7 +94,6 @@ def load_saved_system():
     metadata_path = os.path.join(BASE_DIR, config["metadata_file"])
 
     for path in (
-        model_path,
         embeddings_path,
         index_path,
         documents_path,
@@ -93,11 +112,7 @@ def load_saved_system():
     with open(documents_path, "rb") as file:
         documents = pickle.load(file)
 
-    model = SentenceTransformer(
-        model_path,
-        device="cpu",
-        local_files_only=True,
-    )
+    model = load_embedding_model(model_path)
 
     expected_documents = int(metadata["number_of_documents"])
     expected_dimension = int(metadata["embedding_dimension"])
