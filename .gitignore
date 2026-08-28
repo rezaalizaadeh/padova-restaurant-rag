@@ -1,19 +1,23 @@
-# Python
+# Python caches and local environments
 __pycache__/
 *.py[cod]
 .venv/
+professor-venv/
+
+# Secrets and local configuration
 .env
+.env.*
+!.env.example
 
-# Model caches
-.model_cache/
-
-# Generated artifacts
-*.npy
-*.index
-*.pkl
-
-# Operating system
+# Editor and operating-system files
 .DS_Store
+.vscode/
+.idea/
 
-# Private/full datasets
-data/raw/
+# Temporary output
+*.log
+*.tmp
+
+
+# Local pretrained model weights
+embedding_model/model.safetensors
