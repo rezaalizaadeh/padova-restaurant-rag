@@ -12,37 +12,33 @@ with Python 3.11.
 
 ## Dataset
 
-The primary dataset was collected independently on 26 August 2026 using the
-Google Places API (New), qualifying the project for the optional data-collection
-bonus. The collection process discovered 518 unique restaurant identifiers
-through 83 text-search requests. Capped Place Details requests were then used
-to collect 502 restaurants and 2,433 review texts.
+Following the instructor's recommendation, the submitted model and official
+answers use the instructor-provided dataset. This makes the system directly
+comparable with the expected course results. The top-level input files contain:
 
-After cleaning, the submitted data contains:
-
-- `places.csv`: 502 restaurants and 21 metadata columns;
-- `reviews.csv`: 2,429 non-empty, deduplicated review rows and 5 columns;
-- 496 restaurants with returned review text and 6 without returned review text;
-- 451 addresses explicitly matching Padova, Padua, or a 351xx postcode;
+- `places.csv`: 513 restaurants and 21 metadata columns;
+- `reviews.csv`: 2,565 raw review rows and 5 columns;
+- 2,557 non-empty, deduplicated reviews after preprocessing;
 - `questions.txt`: 23 official evaluation questions.
 
-The two CSV files are joined using `place_id`. There are no reviews whose
-identifier is missing from the restaurant table. Four repeated
-restaurant-review pairs were removed.
+The two CSV files are joined using `place_id`. All 513 identifiers occur in
+both files. Preprocessing removes two empty reviews and six repeated
+restaurant-review pairs.
+
+For the optional data-collection bonus, a second dataset was collected
+independently on 26 August 2026 with Google Places API (New). The collection
+found 518 unique identifiers, downloaded 502 restaurants and 2,433 review
+texts, and produced a strict Padova subset of 451 restaurants and 2,176 clean
+reviews. The collection scripts, raw exports, strict Padova files, state files,
+and provenance report are included under `data_collection/`. They are evidence
+of independent collection but are deliberately not used to build the submitted
+model, in accordance with the instructor's recommendation.
 
 Google Places returns a small sample of reviews for each restaurant (at most
-five in this collection). This sample count is not the restaurant's total
-Google rating count; `place_ratings_count` stores the broader rating count.
-
-The independently collected data was compared with the instructor dataset and
-179 restaurant identifiers overlapped. For those overlapping restaurants, 21
-metadata values absent from the fresh API response were filled from the
-instructor dataset. Fresh Google data remains the primary source, and the
-fallback is limited to missing structured metadata.
-
-The API key is entered invisibly at runtime, is never written to disk, and is
-not included in the submission. Collection scripts use explicit request caps.
-The submitted `exam.py` is fully offline and never calls Google APIs.
+five in this collection). The independent dataset overlaps the instructor data
+on 174 restaurant identifiers. The API key is entered invisibly at runtime,
+is never written to disk, and is not included in the submission. `exam.py` is
+fully offline and never calls Google APIs.
 
 ## RAG pipeline
 
@@ -60,12 +56,12 @@ The submitted `exam.py` is fully offline and never calls Google APIs.
 
 The knowledge base contains two complementary document types:
 
-- 496 `restaurant_facts` documents with ratings, cuisine/type, address, price
+- 513 `restaurant_facts` documents with ratings, cuisine/type, address, price
   level, delivery, dine-in, reservations, meals, drinks, and opening hours;
-- 2,429 `review` documents containing restaurant identity and customer-review
+- 2,557 `review` documents containing restaurant identity and customer-review
   evidence.
 
-The final knowledge base therefore contains 2,925 documents.
+The final knowledge base therefore contains 3,070 documents.
 
 ### 3. Embeddings and vector index
 
@@ -119,9 +115,9 @@ facts.
   retrieval assets, and official answers from scratch;
 - `qa_engine.py`: shared query analysis, reranking, and answer-generation logic;
 - `evaluate.py`: reproducible integrity and behavior checks;
-- `data_collection/`: fresh-data collection scripts, capped request state,
-  raw Google exports, cleaned intermediate data, instructor fallback data, and
-  the machine-readable provenance report;
+- `data_collection/`: independent Google collection scripts, capped request
+  state, raw exports, strict Padova data, backups of the instructor data, and a
+  machine-readable provenance report;
 - `questions.txt`: questions read at runtime;
 - `Question-Answer.txt`: answers for the instructor's official questions;
 - `places.csv`, `reviews.csv`: source data;
@@ -194,11 +190,10 @@ later offline inference.
 
 ## Limitations
 
-- Google Places supplies at most five review samples per restaurant, so
-  review-based conclusions represent the available sample rather than every
-  online review.
-- Six collected restaurants have no returned review text and therefore do not
-  contribute review or restaurant-fact documents to the current index.
+- The model dataset was supplied by the instructor and was downloaded more
+  than one year before the course assignment; facts may therefore be outdated.
+- Google Places supplies at most five review samples per restaurant in the
+  separately included bonus collection.
 - Review statements can be subjective or outdated.
 - The source data has no official hygiene score and no structured fields for
   outdoor seating or live music.
