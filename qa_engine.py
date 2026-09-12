@@ -102,6 +102,22 @@ def normalize_text(value):
     value = re.sub(r"[^a-z0-9]+", " ", value)
     return " ".join(value.split())
 
+def is_twenty_four_hour_question(normalized):
+    """Return True if the question means 'open all day / 24 hours'."""
+
+    patterns = [
+        r"\b24 hour\b",
+        r"\b24 7\b",
+        r"\bopen all day\b",
+        r"\baround the clock\b",
+        r"\balways open\b",
+        r"\bnever close\b",
+        r"\bnever closes\b",
+        r"\bopen continuously\b",
+    ]
+
+    return any(re.search(pattern, normalized) for pattern in patterns)
+
 
 def keyword_hits(text, keywords):
     """Count how many distinct keywords occur in normalized text."""
@@ -159,13 +175,15 @@ def build_restaurant_profiles(documents):
 
 def find_exact_restaurant(question, profiles):
     """
-    Find the longest restaurant name explicitly present in the question.
+    Match a restaurant mentioned in the question.
 
-    Longest-first matching avoids selecting a shorter name such as
-    ``Bar Fortuna`` when the question contains ``Bar Fortuna Sas``.
+    First prefer the complete restaurant name.
+    If that fails, allow a multi-word partial name only when
+    it identifies one restaurant uniquely.
     """
 
     normalized_question = f" {normalize_text(question)} "
+
     names = sorted(
         (
             (normalize_text(profile["place_name"]), profile["place_id"])
@@ -175,12 +193,52 @@ def find_exact_restaurant(question, profiles):
         reverse=True,
     )
 
+    # 1. Prefer an exact full-name match.
     for normalized_name, place_id in names:
         if len(normalized_name) < 4:
             continue
 
         if f" {normalized_name} " in normalized_question:
             return place_id
+
+    # 2. Otherwise look for strong multi-word partial matches.
+    candidates = []
+
+    for normalized_name, place_id in names:
+        words = normalized_name.split()
+
+        if len(words) < 2:
+            continue
+
+        # Try longer partial names before shorter ones.
+        for size in range(len(words) - 1, 1, -1):
+            found = False
+
+            for start in range(len(words) - size + 1):
+                partial_name = " ".join(words[start:start + size])
+
+                if f" {partial_name} " in normalized_question:
+                    candidates.append((size, place_id))
+                    found = True
+                    break
+
+            if found:
+                break
+
+    if not candidates:
+        return None
+
+    # Keep only the strongest (longest) partial matches.
+    best_size = max(size for size, _ in candidates)
+    best_place_ids = {
+        place_id
+        for size, place_id in candidates
+        if size == best_size
+    }
+
+    # Use the match only when it points to exactly one restaurant.
+    if len(best_place_ids) == 1:
+        return next(iter(best_place_ids))
 
     return None
 
@@ -235,7 +293,7 @@ def analyze_question(question, profiles):
             aspect = aspect_name
             break
 
-    if "24 hour" in normalized or "24hour" in normalized:
+    if is_twenty_four_hour_question(normalized):
         intent = "twenty_four_hour"
     elif property_name and exact_place_id:
         intent = "exact_fact"
