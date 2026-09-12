@@ -52,7 +52,53 @@ def main():
             and "Open 24 hours" in answer,
         )
     )
+    answer, diagnostics = run(
+        "Does the restaurant Antico Brolo accept reservations?"
+    )
+    checks.append(
+        (
+            "shortened restaurant name resolution",
+            diagnostics["analysis"]["intent"] == "exact_fact"
+            and diagnostics["analysis"]["exact_place_id"] is not None
+            and answer.startswith("Yes.")
+            and "Antico Brolo l'Osteria" in answer,
+        )
+    )
 
+    answer, diagnostics = run(
+        "Can I reserve a table at Antico Brolo?"
+    )
+    checks.append(
+        (
+            "reservation paraphrase handling",
+            diagnostics["analysis"]["intent"] == "exact_fact"
+            and answer.startswith("Yes.")
+            and "Antico Brolo l'Osteria" in answer,
+        )
+    )
+
+    answer, diagnostics = run(
+        "What restaurants are open all day?"
+    )
+    checks.append(
+        (
+            "natural opening-hours query",
+            diagnostics["analysis"]["intent"] == "twenty_four_hour"
+            and "opening-hours metadata identifies" in answer
+            and "Open 24 hours" in answer,
+        )
+    )
+
+    answer, diagnostics = run(
+        "Which restaurants are open around the clock?"
+    )
+    checks.append(
+    (
+        "opening-hours paraphrase handling",
+        diagnostics["analysis"]["intent"] == "twenty_four_hour"
+        and "Open 24 hours" in answer,
+    )
+)
     answer, diagnostics = run(
         "Which restaurant has the best ambiance in the city?"
     )
