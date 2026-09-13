@@ -99,6 +99,15 @@ def main():
         and "Open 24 hours" in answer,
     )
 )
+    
+    answer, diagnostics = run("Which restaurants have parking?")
+    checks.append(
+    (
+        "unsupported query safety",
+        diagnostics["analysis"]["intent"] == "unsupported"
+        and "not enough" in answer.lower(),
+    )
+)
     answer, diagnostics = run(
         "Which restaurant has the best ambiance in the city?"
     )

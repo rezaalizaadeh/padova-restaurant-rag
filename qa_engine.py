@@ -313,8 +313,20 @@ def analyze_question(question, profiles):
         intent = "affordable"
     elif aspect:
         intent = "aspect"
-    else:
+    elif any(
+        cue in normalized
+        for cue in (
+            "best",
+            "top",
+            "recommend",
+            "good place",
+            "where can i eat",
+            "where to eat",
+        )
+    ):
         intent = "overall"
+    else:
+        intent = "unsupported"
 
     return {
         "question": clean_question,
@@ -862,6 +874,13 @@ def answer_question(question, model, index, documents, profiles=None, top_k=5):
         profiles = build_restaurant_profiles(documents)
 
     analysis = analyze_question(question, profiles)
+
+    if analysis["intent"] == "unsupported":
+        answer = (
+            "There is not enough supported evidence in the current dataset "
+            "to answer that question reliably."
+        )
+        return answer, {"analysis": analysis, "ranked": []}
 
     if analysis["intent"] == "exact_fact":
         answer = answer_exact_fact(analysis, profiles)
